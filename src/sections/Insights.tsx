@@ -1,7 +1,20 @@
+import { useEffect, useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ArrowRight, BookOpen, Clock, CalendarDays } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
-const mockPosts = [
+interface Post {
+    id: string | number;
+    title: string;
+    excerpt: string;
+    category: string;
+    coverImage: string;
+    date: string;
+    readTime: string;
+    link?: string;
+}
+
+const mockPosts: Post[] = [
     {
         id: 1,
         title: 'A Geração de Imagens com IA respeitando a Doutrina',
@@ -35,6 +48,51 @@ const mockPosts = [
 ];
 
 export default function Insights() {
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchInsights() {
+            try {
+                // Tenta buscar diretamente do Supabase os últimos 6 posts mais recentes
+                const { data, error } = await supabase
+                    .from('insights')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(6);
+
+                if (error) {
+                    console.error('Erro ao buscar insights do Supabase:', error);
+                    setPosts(mockPosts); // Fallback caso dê erro na API
+                } else if (data && data.length > 0) {
+                    // Mapeia os dados do Supabase para a estrutura visual
+                    const formattedPosts = data.map((item) => ({
+                        id: item.id,
+                        title: item.title,
+                        excerpt: item.excerpt,
+                        category: item.category,
+                        coverImage: item.coverImage,
+                        // Formatação simples de data a partir do created_at (Ex: "27 Fev 2026")
+                        date: new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(item.created_at)),
+                        readTime: item.readTime,
+                        link: '#',
+                    }));
+                    setPosts(formattedPosts);
+                } else {
+                    // Se o banco estiver vazio, exibe o mockup para não deixar a seção feia
+                    setPosts(mockPosts);
+                }
+            } catch (err) {
+                console.error('Erro inesperado na query do Supabase:', err);
+                setPosts(mockPosts);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        fetchInsights();
+    }, []);
+
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
@@ -80,62 +138,68 @@ export default function Insights() {
                     </motion.div>
                 </motion.div>
 
-                <motion.div
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-5%" }}
-                    variants={containerVariants}
-                >
-                    {mockPosts.map((post) => (
-                        <motion.article
-                            key={post.id}
-                            variants={itemVariants}
-                            className="group flex flex-col bg-concafras-navy/30 rounded-2xl overflow-hidden border border-white/10 hover:bg-concafras-navy/50 hover:border-concafras-gold/30 hover:shadow-xl hover:shadow-concafras-navy/30 transition-all duration-500 cursor-pointer"
-                        >
-                            <div className="relative aspect-video overflow-hidden">
-                                <div className="absolute top-4 left-4 z-20">
-                                    <span className="bg-black/60 backdrop-blur-md border border-white/10 text-white/90 text-xs font-mono tracking-wider px-3 py-1.5 rounded-full uppercase">
-                                        {post.category}
-                                    </span>
-                                </div>
-                                <img
-                                    src={post.coverImage}
-                                    alt={post.title}
-                                    className="w-full h-full object-cover transform scale-105 group-hover:scale-110 transition-transform duration-700 ease-out"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-concafras-dark to-transparent opacity-60" />
-                            </div>
-
-                            <div className="flex flex-col flex-grow p-6 md:p-8">
-                                <div className="flex items-center gap-4 text-xs font-mono text-gray-500 mb-4">
-                                    <div className="flex items-center gap-1.5">
-                                        <CalendarDays className="w-3.5 h-3.5" />
-                                        <span>{post.date}</span>
+                {isLoading ? (
+                    <div className="flex justify-center items-center py-20">
+                        <div className="w-8 h-8 rounded-full border-2 border-concafras-gold border-t-transparent animate-spin"></div>
+                    </div>
+                ) : (
+                    <motion.div
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-5%" }}
+                        variants={containerVariants}
+                    >
+                        {posts.map((post) => (
+                            <motion.article
+                                key={post.id}
+                                variants={itemVariants}
+                                className="group flex flex-col bg-concafras-navy/30 rounded-2xl overflow-hidden border border-white/10 hover:bg-concafras-navy/50 hover:border-concafras-gold/30 hover:shadow-xl hover:shadow-concafras-navy/30 transition-all duration-500 cursor-pointer"
+                            >
+                                <div className="relative aspect-video overflow-hidden">
+                                    <div className="absolute top-4 left-4 z-20">
+                                        <span className="bg-black/60 backdrop-blur-md border border-white/10 text-white/90 text-xs font-mono tracking-wider px-3 py-1.5 rounded-full uppercase">
+                                            {post.category}
+                                        </span>
                                     </div>
-                                    <div className="w-1 h-1 rounded-full bg-gray-700" />
-                                    <div className="flex items-center gap-1.5">
-                                        <Clock className="w-3.5 h-3.5" />
-                                        <span>{post.readTime}</span>
+                                    <img
+                                        src={post.coverImage}
+                                        alt={post.title}
+                                        className="w-full h-full object-cover transform scale-105 group-hover:scale-110 transition-transform duration-700 ease-out"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-concafras-dark to-transparent opacity-60" />
+                                </div>
+
+                                <div className="flex flex-col flex-grow p-6 md:p-8">
+                                    <div className="flex items-center gap-4 text-xs font-mono text-gray-500 mb-4">
+                                        <div className="flex items-center gap-1.5">
+                                            <CalendarDays className="w-3.5 h-3.5" />
+                                            <span>{post.date}</span>
+                                        </div>
+                                        <div className="w-1 h-1 rounded-full bg-gray-700" />
+                                        <div className="flex items-center gap-1.5">
+                                            <Clock className="w-3.5 h-3.5" />
+                                            <span>{post.readTime}</span>
+                                        </div>
+                                    </div>
+
+                                    <h3 className="font-display text-2xl text-white/90 leading-snug mb-4 group-hover:text-concafras-gold transition-colors duration-300">
+                                        {post.title}
+                                    </h3>
+
+                                    <p className="font-body text-gray-400 text-sm leading-relaxed mb-6 flex-grow line-clamp-3">
+                                        {post.excerpt}
+                                    </p>
+
+                                    <div className="mt-auto flex items-center gap-2 text-concafras-accent/90 text-sm font-medium tracking-wide group-hover:text-concafras-gold transition-colors duration-300">
+                                        Ler Artigo Completo
+                                        <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
                                     </div>
                                 </div>
-
-                                <h3 className="font-display text-2xl text-white/90 leading-snug mb-4 group-hover:text-concafras-gold transition-colors duration-300">
-                                    {post.title}
-                                </h3>
-
-                                <p className="font-body text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
-                                    {post.excerpt}
-                                </p>
-
-                                <div className="mt-auto flex items-center gap-2 text-concafras-accent/90 text-sm font-medium tracking-wide group-hover:text-concafras-gold transition-colors duration-300">
-                                    Ler Artigo Completo
-                                    <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-                                </div>
-                            </div>
-                        </motion.article>
-                    ))}
-                </motion.div>
+                            </motion.article>
+                        ))}
+                    </motion.div>
+                )}
             </div>
         </section>
     );
