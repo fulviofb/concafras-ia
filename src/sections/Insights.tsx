@@ -71,10 +71,10 @@ export default function Insights() {
                         title: item.title,
                         excerpt: item.excerpt,
                         category: item.category,
-                        coverImage: item.coverImage,
+                        coverImage: item.coverimage,
                         // Formatação simples de data a partir do created_at (Ex: "27 Fev 2026")
                         date: new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(item.created_at)),
-                        readTime: item.readTime,
+                        readTime: item.readtime,
                         link: '#',
                     }));
                     setPosts(formattedPosts);
