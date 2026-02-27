@@ -1,51 +1,50 @@
 import { useEffect, useRef, useState } from 'react';
+import { motion, Variants } from 'framer-motion';
 import { Copy, Check, Play } from 'lucide-react';
+import { cn } from '../utils/cn';
 
 const prompts = [
   {
-    text: 'Animate the jazz drummer performing an intense, rapid drum solo. Add fast, precise hand and arm movements, simulating real drum hits. Include quick, cinematic camera movements: slight handheld shake, sudden push-ins, and whip pans, matching the energy of the solo.',
-    thumbnail: 'https://images.unsplash.com/photo-1519892300165-cb5542fb47c7?w=800&h=450&fit=crop',
+    text: 'A close up shot of a Brazilian man dancing capoeira in a sunlit dusty courtyard. The camera focuses on the intricate movements of his feet and sweat drops flying from his brow. 4k resolution, cinematic lighting, slow motion 120fps.',
+    image: '/images/prompts/vid_prompt_capoeira.png',
   },
   {
-    text: 'Two women, side by side, emerge slowly from darkness. The camera begins in a close-up on the face of the lighter-skinned woman, then gently pans across to reveal the darker-skinned woman. Light dances across their faces, revealing texture, strength, and contrast. The motion is slow, elegant.',
-    thumbnail: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&h=450&fit=crop',
+    text: 'Drone tracking shot following a white dove flying through a majestic gothic cathedral, sun rays piercing through stained glass windows creating volumetric light rays. Ethereal atmosphere, highly detailed architecture.',
+    image: '/images/prompts/vid_prompt_dove.png',
   },
   {
-    text: 'The scene takes place inside a small, weathered wooden rowboat caught in the middle of a violent storm at sea. The ocean swells violently, crashing waves slam against the sides of the boat, sending water spraying into the frame. A rugged, bearded man wrapped in a wet cloak stands, shouting furiously.',
-    thumbnail: 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=800&h=450&fit=crop',
+    text: 'Time-lapse of a blooming lotus flower in surrounded by gentle morning mist. Soft pastel colors, macro photography, 8k resolution, nature documentary style.',
+    image: '/images/prompts/vid_prompt_lotus.png',
   },
   {
-    text: 'The red Lamborghini is speeding down the highway, rapidly overtaking other cars. Start with a dynamic top-down shot, then smoothly transition into a side tracking shot. Keep the car always centered. Add intense motion blur, fast road reflections, wind effects.',
-    thumbnail: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=450&fit=crop',
+    text: 'Medium shot of an elderly woman with kind eyes holding a glowing ethereal orb in her hands. The light illuminates her face with a warm, comforting glow. Cinematic portrait, anamorphic lens flare.',
+    image: '/images/prompts/vid_prompt_orb.png',
   },
   {
-    text: 'Begin with the woman standing centered in a golden wheat field under soft natural sunlight. Apply a dreamy aesthetic with halation on the highlights and warm lens glow. The camera slowly orbits around her in a smooth 360° rotation, keeping her in the center.',
-    thumbnail: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=450&fit=crop',
+    text: 'Wide establishing shot of a futuristic but peaceful city integrated with lush green nature, flying vehicles leaving soft light trails in the twilight sky. Cyber-renaissance aesthetic, unreal engine 5 render style.',
+    image: '/images/prompts/vid_prompt_city.png',
   },
   {
-    text: 'Tracking shot races alongside her as she glides low over the vibrant road — pink fabric whipping in the wind, her eyes locked forward. The background blurs violently, but her face stays razor sharp. Time bends around her.',
-    thumbnail: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&h=450&fit=crop',
+    text: 'Slow continuous pan across a diverse group of people holding hands in a circle around a campfire under a starry night sky. Warm firelight flickering on their faces, sense of unity and peace. Shot on ARRI Alexa 65.',
+    image: '/images/prompts/vid_prompt_campfire.png',
   },
 ];
 
-export default function VideoPrompts() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+const getEditorialOffset = (index: number) => {
+  const isMdEven = index % 2 === 0;
+  const colLg = index % 3;
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.05 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
+  let baseClass = isMdEven ? "md:mt-0" : "md:mt-12";
+
+  if (colLg === 0) baseClass += " lg:mt-0";
+  else if (colLg === 1) baseClass += " lg:mt-16";
+  else if (colLg === 2) baseClass += " lg:mt-32";
+
+  return baseClass;
+};
+
+export default function VideoPrompts() {
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const handleCopy = async (text: string, index: number) => {
     await navigator.clipboard.writeText(text);
@@ -53,49 +52,88 @@ export default function VideoPrompts() {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      }
+    }
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" }
+    }
+  };
+
   return (
-    <section ref={sectionRef} className="relative min-h-screen w-full py-28 px-6 md:px-12 lg:px-24">
+    <section id="video-prompts" className="relative min-h-screen w-full py-28 px-6 md:px-12 lg:px-24">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-20">
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-white/90 mb-6">
-            Prompts
+        <motion.div
+          className="mb-20"
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <p className="font-mono text-xs tracking-[0.3em] text-concafras-gold/50 mb-6 uppercase">
+            Exemplos práticos
+          </p>
+          <h2 className="font-display text-5xl md:text-6xl lg:text-7xl font-light text-white/90 mb-6">
+            Vídeos
           </h2>
           <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-concafras-blue/40 bg-concafras-navy/50">
-            <Play className="w-4 h-4 text-concafras-gold" />
-            <span className="font-mono text-xs tracking-wider text-concafras-gold/80 uppercase">
-              Vídeo
+            <span className="font-mono text-xs tracking-wider text-concafras-accent/80 uppercase">
+              Video
             </span>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 pb-32"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-10%" }}
+        >
           {prompts.map((prompt, index) => (
-            <div
+            <motion.div
               key={index}
-              className={`group relative bg-concafras-navy/40 border border-concafras-blue/15 rounded-xl overflow-hidden
-                hover:border-concafras-gold/25 transition-all duration-700
-                ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-              style={{ transitionDelay: `${index * 100}ms` }}
+              variants={itemVariants}
+              className={cn(
+                "group relative bg-concafras-dark border border-concafras-navy overflow-hidden rounded-2xl",
+                "hover:border-concafras-gold/30 hover:shadow-[0_10px_40px_rgba(212,168,83,0.1)] transition-all duration-700",
+                getEditorialOffset(index)
+              )}
             >
               <div className="aspect-video overflow-hidden relative">
-                <img
-                  src={prompt.thumbnail}
-                  alt={`Video prompt example ${index + 1}`}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                <motion.img
+                  src={prompt.image}
+                  alt={`Prompt example ${index + 1}`}
+                  className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110"
+                  initial={{ scale: 1.05 }}
+                  whileInView={{ scale: 1 }}
+                  transition={{ duration: 1.5, ease: "easeOut" }}
                 />
-                <div className="absolute inset-0 bg-concafras-dark/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="w-14 h-14 rounded-full bg-concafras-gold/20 backdrop-blur-sm flex items-center justify-center border border-concafras-gold/30">
-                    <Play className="w-6 h-6 text-concafras-gold ml-0.5" />
+                <div className="absolute inset-0 bg-concafras-dark/40 group-hover:bg-concafras-dark/20 transition-colors duration-500 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full bg-concafras-gold/90 flex items-center justify-center transform scale-90 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_20px_rgba(212,168,83,0.4)]">
+                    <Play className="w-5 h-5 text-concafras-dark fill-current ml-1" />
                   </div>
                 </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-concafras-dark/90 to-transparent opacity-80" />
               </div>
-              <div className="p-6">
-                <p className="font-mono text-xs text-gray-400 line-clamp-4 leading-relaxed mb-4">
+              <div className="relative p-6 md:p-8 bg-concafras-dark/95 backdrop-blur-sm -mt-16">
+                <p className="font-mono text-xs md:text-sm text-gray-400 line-clamp-4 leading-relaxed mb-6 group-hover:text-gray-300 transition-colors">
                   {prompt.text}
                 </p>
                 <button
                   onClick={() => handleCopy(prompt.text, index)}
-                  className="flex items-center gap-2 font-body text-xs text-gray-500 hover:text-concafras-gold transition-colors"
+                  className="flex items-center gap-2 font-body text-xs md:text-sm text-gray-500 hover:text-concafras-gold transition-colors font-medium"
                 >
                   {copiedIndex === index ? (
                     <>
@@ -110,9 +148,9 @@ export default function VideoPrompts() {
                   )}
                 </button>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

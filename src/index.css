@@ -38,20 +38,7 @@ body {
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--concafras-dark);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--concafras-blue);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--concafras-light);
+  display: none;
 }
 
 /* Noise texture overlay */

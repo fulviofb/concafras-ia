@@ -47,7 +47,7 @@ export default function WhatsNew() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen w-full py-28 px-6 md:px-12 lg:px-24">
+    <section id="whats-new" ref={sectionRef} className="relative min-h-screen w-full py-28 px-6 md:px-12 lg:px-24">
       <div className="max-w-6xl mx-auto">
         <div className="mb-20">
           <p className="font-mono text-xs tracking-[0.3em] text-concafras-gold/50 mb-6 uppercase">

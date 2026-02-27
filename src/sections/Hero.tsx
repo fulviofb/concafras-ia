@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 
 export default function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -89,48 +90,97 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section id="hero" className="relative h-screen w-full overflow-hidden">
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
       />
 
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
-        <div className="text-center">
-          <p className="font-body text-xs tracking-[0.4em] text-concafras-gold/60 mb-4 uppercase">
+        <motion.div
+          className="text-center"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.2,
+                delayChildren: 0.3
+              }
+            }
+          }}
+        >
+          <motion.p
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+            }}
+            className="font-body text-xs md:text-sm tracking-[0.4em] text-concafras-gold/80 mb-6 uppercase"
+          >
             Concafras · 2026
-          </p>
+          </motion.p>
 
-          <h1 className="font-display tracking-tight mb-6">
-            <span className="block text-5xl md:text-7xl lg:text-8xl font-medium text-white/95">
+          <motion.h1
+            className="font-display tracking-tight mb-8"
+            variants={{
+              hidden: { opacity: 0, y: 30, scale: 0.95 },
+              visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 1, ease: "easeOut" } }
+            }}
+          >
+            <span className="block text-6xl md:text-8xl lg:text-9xl font-medium text-white/95 leading-none">
               IA
             </span>
-            <span className="block text-4xl md:text-6xl lg:text-7xl font-light italic text-concafras-accent/70 my-2">
+            <span className="block text-4xl md:text-6xl lg:text-7xl font-light italic text-concafras-accent/80 my-3">
               na Comunicação
             </span>
-            <span className="block text-5xl md:text-7xl lg:text-8xl font-semibold text-gradient-gold">
+            <span className="block text-6xl md:text-8xl lg:text-9xl font-semibold text-gradient-gold leading-none">
               Espírita
             </span>
-          </h1>
+          </motion.h1>
 
-          <div className="mt-12 space-y-3">
-            <p className="font-body text-sm tracking-wide text-concafras-accent/40">
+          <motion.div
+            className="mt-14 space-y-4"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { duration: 1, delay: 1 } }
+            }}
+          >
+            <p className="font-body text-sm md:text-base tracking-wide text-concafras-accent/60 max-w-md mx-auto">
               Um guia prático de ferramentas de IA para a divulgação espírita
             </p>
-            <p className="font-body text-xs tracking-[0.2em] text-white/20 uppercase">
+            <p className="font-body text-xs tracking-[0.2em] text-white/30 uppercase mt-4">
               por Fúlvio
             </p>
-          </div>
+          </motion.div>
 
           {/* Scroll indicator */}
-          <div className="mt-20 animate-float">
-            <div className="w-px h-16 bg-gradient-to-b from-concafras-gold/40 to-transparent mx-auto" />
-          </div>
-        </div>
+          <motion.div
+            className="mt-24"
+            variants={{
+              hidden: { opacity: 0, height: 0 },
+              visible: { opacity: 1, height: 'auto', transition: { duration: 1, delay: 1.5 } }
+            }}
+          >
+            <motion.div
+              className="w-px h-20 bg-gradient-to-b from-concafras-gold/50 to-transparent mx-auto origin-top"
+              animate={{
+                scaleY: [0.5, 1, 0.5],
+                opacity: [0.3, 0.8, 0.3],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Gradient overlay at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-concafras-dark to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-concafras-dark to-transparent pointer-events-none" />
     </section>
   );
 }
