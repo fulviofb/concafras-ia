@@ -1,7 +1,45 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, BookOpen, Code2, Mic2, Scissors, Sparkles, Wand2 } from 'lucide-react';
+import {
+  ArrowUpRight,
+  BookOpen,
+  Clapperboard,
+  Code2,
+  MessagesSquare,
+  Mic,
+  Mic2,
+  PartyPopper,
+  Scissors,
+  Sparkles,
+  Wand2,
+} from 'lucide-react';
 
 const repoBase = 'https://github.com/fulviofb/lab-midia-ia/blob/master';
+
+const notebookUrl = 'https://notebooklm.google.com/notebook/cf3e4adf-5026-47bd-9d98-afdd08de258b';
+
+const recipes = [
+  {
+    title: 'Convite de evento',
+    audience: 'Arte + vídeo curto',
+    description: 'Do texto à arte pronta no Canva, com prompt pronto para a LLM. Em até 1 hora, sem instalar nada.',
+    icon: PartyPopper,
+    href: `${repoBase}/docs/receitas/01-convite-de-evento.md`,
+  },
+  {
+    title: 'Cortes de palestra',
+    audience: '3 vídeos legendados',
+    description: 'Transcrição automática no CapCut, a LLM encontra os melhores trechos, você corta e publica.',
+    icon: Clapperboard,
+    href: `${repoBase}/docs/receitas/02-cortes-de-palestra.md`,
+  },
+  {
+    title: 'Narração de um texto',
+    audience: 'Com voz própria ou de IA',
+    description: 'Prepare o texto para ser falado, grave ou gere a voz, e monte o áudio de forma ética.',
+    icon: Mic,
+    href: `${repoBase}/docs/receitas/03-narracao-de-texto.md`,
+  },
+];
 
 const paths = [
   {
@@ -94,6 +132,29 @@ export default function StartHere() {
               Para quem está começando, a pergunta não é “qual IA é melhor?”. A pergunta é:
               o que você quer comunicar, para quem, com qual cuidado e com qual nível técnico?
             </p>
+            <div className="rounded-2xl border border-concafras-gold/25 bg-concafras-navy/50 p-6 mb-4">
+              <div className="flex items-start gap-4">
+                <div className="w-11 h-11 rounded-xl bg-concafras-gold/15 flex items-center justify-center flex-shrink-0">
+                  <MessagesSquare className="w-5 h-5 text-concafras-gold" />
+                </div>
+                <div>
+                  <h3 className="font-display text-xl text-white/90 mb-2">Pergunte ao caderno de estudo</h3>
+                  <p className="font-body text-sm text-gray-500 leading-relaxed mb-4">
+                    Um caderno no NotebookLM com todo este material. Abra, faça sua pergunta em português
+                    e receba resposta com base nas trilhas e receitas — sem copiar nada, gratuito.
+                  </p>
+                  <a
+                    href={notebookUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 font-mono text-xs tracking-wider uppercase text-concafras-gold hover:text-concafras-warm transition-colors"
+                  >
+                    Abrir o caderno
+                    <ArrowUpRight className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+            </div>
             <div className="rounded-2xl border border-concafras-gold/20 bg-concafras-navy/40 p-6">
               <div className="flex items-start gap-4">
                 <div className="w-11 h-11 rounded-xl bg-concafras-gold/10 flex items-center justify-center flex-shrink-0">
@@ -119,6 +180,42 @@ export default function StartHere() {
           </div>
 
           <div className="space-y-4">
+            <p className="font-mono text-[11px] tracking-[0.25em] uppercase text-concafras-gold/50">
+              Receitas rápidas — resultado pronto em poucos passos
+            </p>
+            {recipes.map((recipe, index) => (
+              <a
+                key={recipe.title}
+                href={recipe.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`group block rounded-2xl border border-concafras-gold/25 bg-concafras-navy/45 p-5 hover:border-concafras-gold/50 hover:bg-concafras-navy/70 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+                style={{ transitionDelay: `${index * 80 + 120}ms` }}
+              >
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 rounded-xl bg-concafras-gold/10 flex items-center justify-center flex-shrink-0 group-hover:bg-concafras-gold/20 transition-colors">
+                    <recipe.icon className="w-5 h-5 text-concafras-gold" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+                      <h3 className="font-display text-xl text-white/90 group-hover:text-concafras-warm transition-colors">
+                        {recipe.title}
+                      </h3>
+                      <span className="font-mono text-[10px] tracking-wider uppercase text-concafras-gold/45">
+                        {recipe.audience}
+                      </span>
+                    </div>
+                    <p className="font-body text-sm text-gray-500 leading-relaxed group-hover:text-gray-400 transition-colors">
+                      {recipe.description}
+                    </p>
+                  </div>
+                  <ArrowUpRight className="w-5 h-5 text-gray-700 group-hover:text-concafras-gold group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all flex-shrink-0" />
+                </div>
+              </a>
+            ))}
+            <p className="font-mono text-[11px] tracking-[0.25em] uppercase text-concafras-gold/50 pt-4">
+              Trilhas completas — aprenda o caminho inteiro
+            </p>
             {paths.map((path, index) => (
               <a
                 key={path.title}
