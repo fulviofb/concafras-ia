@@ -2,6 +2,10 @@ node_modules
 dist
 .DS_Store
 *.local
+.env
+
+# OneDrive conflict copies
+*-Fulvionote.*
 
 # TypeScript build info
 *.tsbuildinfo

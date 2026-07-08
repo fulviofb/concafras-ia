@@ -6,6 +6,7 @@ const sections = [
     { id: 'intro', label: 'Introdução' },
     { id: 'image-tools', label: 'Ferramentas de Imagem' },
     { id: 'video-tools', label: 'Ferramentas de Vídeo' },
+    { id: 'lab-catalog', label: 'Lab Mídia IA' },
     { id: 'creative-flow', label: 'Fluxo Criativo' },
     { id: 'ai-assistants', label: 'Assistentes IA' },
     { id: 'insights', label: 'Insights & Estudos' },

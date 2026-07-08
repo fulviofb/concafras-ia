@@ -3,6 +3,7 @@ import Intro from './sections/Intro';
 import StartHere from './sections/StartHere';
 import ImageTools from './sections/ImageTools';
 import VideoTools from './sections/VideoTools';
+import LabCatalog from './sections/LabCatalog';
 import CreativeFlow from './sections/CreativeFlow';
 import VisualStyles from './sections/VisualStyles';
 import VisualGlossary from './sections/VisualGlossary';
@@ -25,6 +26,7 @@ function App() {
       <StartHere />
       <ImageTools />
       <VideoTools />
+      <LabCatalog />
       <CreativeFlow />
       <AIAssistants />
       <Insights />
