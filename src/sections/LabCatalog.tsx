@@ -46,7 +46,7 @@ export default function LabCatalog() {
   useEffect(() => {
     let isMounted = true;
 
-    fetch('/data/catalog.public.json')
+    fetch(`/data/catalog.public.json?v=${Date.now()}`, { cache: 'no-store' })
       .then((response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.json();
