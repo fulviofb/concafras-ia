@@ -1,5 +1,6 @@
 import Hero from './sections/Hero';
 import Intro from './sections/Intro';
+import StartHere from './sections/StartHere';
 import ImageTools from './sections/ImageTools';
 import VideoTools from './sections/VideoTools';
 import CreativeFlow from './sections/CreativeFlow';
@@ -21,6 +22,7 @@ function App() {
       <Navigation />
       <Hero />
       <Intro />
+      <StartHere />
       <ImageTools />
       <VideoTools />
       <CreativeFlow />
