@@ -1,30 +1,32 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Calendar, BookOpen, Video } from 'lucide-react';
+import { ArrowRight, BookOpen, ExternalLink, GitBranch, Map, MessageSquare } from 'lucide-react';
+
+const repoBase = 'https://github.com/fulviofb/lab-midia-ia/blob/master';
 
 const news = [
   {
-    type: 'Curso',
-    icon: Video,
-    title: 'Aulas Práticas de IA',
-    description: 'Aprenda a usar inteligência artificial para criar conteúdos visuais impactantes para a divulgação espírita.',
-    date: 'Concafras 2026',
-    link: '#',
+    type: 'Trilhas',
+    icon: Map,
+    title: 'Comece pelo seu objetivo',
+    description: 'Escolha uma trilha prática: primeiro vídeo, cortes de aula, vídeo explicativo, narração ética ou vídeo programático.',
+    date: 'Guia público',
+    link: `${repoBase}/docs/trilhas`,
   },
   {
-    type: 'E-book',
-    icon: BookOpen,
-    title: 'IA na Comunicação Espírita',
-    description: 'A versão completa deste guia de IA para comunicadores espíritas, com ferramentas e prompts práticos.',
+    type: 'Prompt',
+    icon: MessageSquare,
+    title: 'Use uma LLM como orientadora',
+    description: 'Copie o prompt mestre, informe seu nível técnico e receba um passo a passo adequado ao seu caso.',
+    date: 'Sem CLI',
+    link: `${repoBase}/prompts/prompt-mestre-consultor-midia-ia.md`,
+  },
+  {
+    type: 'Laboratório',
+    icon: GitBranch,
+    title: 'Lab Mídia IA',
+    description: 'Repositório público com catálogo de ferramentas, testes reais, workflows, prompts e cuidados éticos.',
     date: 'Atualizado por Fúlvio',
-    link: '#',
-  },
-  {
-    type: 'Evento',
-    icon: Calendar,
-    title: 'Workshop Concafras',
-    description: 'Participe dos workshops e aprenda diretamente na prática como usar IA na comunicação espírita.',
-    date: 'Fevereiro 2026',
-    link: '#',
+    link: 'https://github.com/fulviofb/lab-midia-ia',
   },
 ];
 
@@ -54,12 +56,12 @@ export default function WhatsNew() {
             Novidades
           </p>
           <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-white/90 mb-6">
-            What's{' '}
-            <span className="italic text-concafras-accent/80">New?</span>
+            Continue pelo{' '}
+            <span className="italic text-concafras-accent/80">caminho certo</span>
           </h2>
           <p className="font-body text-lg text-gray-500 max-w-2xl leading-relaxed">
-            Se você quer ir mais longe na comunicação espírita com IA,
-            estas oportunidades já estão te esperando.
+            Este site é a porta de entrada. O laboratório público reúne as trilhas,
+            prompts, testes e ferramentas para você avançar no seu ritmo.
           </p>
         </div>
 
@@ -68,6 +70,8 @@ export default function WhatsNew() {
             <a
               key={item.title}
               href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
               className={`group relative bg-concafras-navy/40 border border-concafras-blue/20 rounded-xl p-8
                 hover:border-concafras-gold/30 hover:bg-concafras-navy/60 transition-all duration-500
                 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
@@ -100,17 +104,30 @@ export default function WhatsNew() {
 
         <div className="mt-20 pt-12 border-t border-concafras-blue/20">
           <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-concafras-gold/20 bg-concafras-navy/40 mb-8">
+              <BookOpen className="w-4 h-4 text-concafras-gold" />
+              <span className="font-mono text-xs tracking-wider text-concafras-gold/70 uppercase">
+                Material vivo
+              </span>
+            </div>
             <p className="font-body text-lg text-gray-300 leading-relaxed mb-6">
               A inteligência artificial é uma ferramenta poderosa para amplificar a mensagem
-              espírita — e este material foi criado para te mostrar como usar essas ferramentas
-              com intenção, propósito e qualidade visual.
+              espírita — quando usada com intenção, responsabilidade, consentimento e qualidade.
             </p>
-            <p className="font-body text-gray-500 leading-relaxed">
-              Sem teoria solta. Sem enrolação. É criação real, com as ferramentas que estão
-              mudando o mercado agora. Use este guia como ponto de partida e bora criar
-              com propósito espírita.
+            <p className="font-body text-gray-500 leading-relaxed mb-8">
+              O conteúdo do laboratório evolui com testes reais: ferramentas são catalogadas,
+              experimentadas, documentadas e recomendadas apenas quando fazem sentido para o público.
             </p>
-            <p className="font-display text-concafras-gold/60 mt-6 italic">
+            <a
+              href="https://github.com/fulviofb/lab-midia-ia"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-concafras-blue/30 bg-concafras-navy/50 text-concafras-accent hover:text-concafras-gold hover:border-concafras-gold/30 transition-all duration-300 font-display"
+            >
+              Abrir laboratório público
+              <ExternalLink className="w-4 h-4" />
+            </a>
+            <p className="font-display text-concafras-gold/60 mt-8 italic">
               "A caridade também se faz pela comunicação." — Fúlvio, Concafras 2026
             </p>
           </div>
