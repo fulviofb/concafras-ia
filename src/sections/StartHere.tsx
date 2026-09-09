@@ -117,7 +117,7 @@ export default function StartHere() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative w-full py-28 px-6 md:px-12 lg:px-24 border-y border-concafras-blue/10">
+    <section id="start-here" ref={sectionRef} className="relative w-full py-28 px-6 md:px-12 lg:px-24 border-y border-concafras-blue/10">
       <div className="absolute inset-0 bg-gradient-to-b from-concafras-navy/10 via-concafras-blue/5 to-transparent pointer-events-none" />
       <div className="relative max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-14 lg:gap-20 items-start">
